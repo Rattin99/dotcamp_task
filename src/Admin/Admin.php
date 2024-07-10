@@ -35,7 +35,7 @@ class Admin {
         }
 
         wp_enqueue_script('task-admin-react', 
-        TASK_URL . 'build/static/js/main.e58a2cfa.js', 
+        TASK_URL . 'build/static/js/main.9b67c240.js', 
         ['wp-element'], 
         TASK_VERSION, 
         true);
@@ -52,6 +52,12 @@ class Admin {
 
     public function get_signups() {
         check_ajax_referer('task_admin_nonce', 'nonce');
+
+        if (!check_ajax_referer('task_admin_nonce', 'nonce', false)) {
+            error_log('Nonce check failed');
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
     
         global $wpdb;
         $table_name = $wpdb->prefix . 'task_signups';

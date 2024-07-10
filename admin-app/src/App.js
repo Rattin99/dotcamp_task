@@ -10,13 +10,17 @@ function App() {
 
   const fetchSignups = async () => {
     try {
-      const response = await axios.post(taskAdminData.ajaxurl, {
+      const response = await axios.post(taskAdminData.ajaxurl, new URLSearchParams({
         action: 'get_signups',
         nonce: taskAdminData.nonce
-      });
-      setSignups(response.data.signups);
+      }));
+      console.log('AJAX response:', response.data);
+      setSignups(response.data.data.signups);
     } catch (error) {
       console.error('Error fetching signups:', error);
+      setError('Failed to fetch signups');
+    } finally {
+      setLoading(false);
     }
   };
 
