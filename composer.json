@@ -1,0 +1,19 @@
+{
+    "name": "rattin/task",
+    "description": "take home task wordpress plugin",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "autoload": {
+        "psr-4": {
+            "Rattin\\Task\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rattin99",
+            "email": "rattin67@student.sust.edu"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
