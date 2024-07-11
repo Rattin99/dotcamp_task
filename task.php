@@ -74,6 +74,62 @@ final class Task {
     public function init_plugin() {
         new Rattin\Task\Frontend\Signup();
         new Rattin\Task\Admin\Admin();
+
+        add_action('init', array($this, 'register_blocks'));
+    }
+
+    public function register_blocks() {
+        if (!function_exists('register_block_type')) {
+            error_log('register_block_type function not found');
+            return;
+        }
+
+        $asset_file = include(TASK_PATH . 'build/signup-list.asset.php');
+
+        wp_register_script(
+            'task-signup-list-block',
+            TASK_URL . 'build/signup-list.js',
+            array_merge($asset_file['dependencies'], ['wp-element', 'wp-server-side-render']),
+            $asset_file['version']
+        );
+    
+        register_block_type('task-plugin/signup-list', array(
+            'editor_script' => 'task-signup-list-block',
+            'render_callback' => array($this, 'render_signup_list_block')
+        ));
+    }
+
+    public function render_signup_list_block($attributes) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'task_signups';
+        
+        try {
+            $signups = $wpdb->get_results("SELECT * FROM $table_name ORDER BY signup_date DESC");
+            
+            if ($wpdb->last_error) {
+                error_log('Database error in signup list block: ' . $wpdb->last_error);
+                return '<p>Error fetching signups.</p>';
+            }
+    
+            if (empty($signups)) {
+                return '<p>' . __('No signups found.', 'task-plugin') . '</p>';
+            }
+    
+            $output = '<ul class="task-signup-list">';
+            foreach ($signups as $signup) {
+                $output .= sprintf(
+                    '<li>%s - %s</li>',
+                    esc_html($signup->name),
+                    esc_html($signup->email)
+                );
+            }
+            $output .= '</ul>';
+    
+            return $output;
+        } catch (Exception $e) {
+            error_log('Exception in signup list block: ' . $e->getMessage());
+            return '<p>An error occurred while fetching signups.</p>';
+        }
     }
 }
 
