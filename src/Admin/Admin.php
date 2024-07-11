@@ -35,12 +35,12 @@ class Admin {
         }
 
         wp_enqueue_script('task-admin-react', 
-        TASK_URL . 'build/static/js/main.9b67c240.js', 
+        TASK_URL . 'src/Admin/build/static/js/main.6b4b9da0.js', 
         ['wp-element'], 
         TASK_VERSION, 
         true);
         wp_enqueue_style('task-admin-style',
-        TASK_URL . 'build/static/css/main.e6c13ad2.css', 
+        TASK_URL . 'src/Admin/build/static/css/main.780d438f.css', 
         [], 
         TASK_VERSION);
 

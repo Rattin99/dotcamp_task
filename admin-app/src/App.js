@@ -25,34 +25,34 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Task Signups</h1>
-      <table>
+    <div class="task-signups-container">
+      <h1 class="task-signups-title">Task Signups</h1>
+      <table class="task-signups-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Hobbies</th>
-            <th>Signup Date</th>
+            <th class="task-signups-th">Name</th>
+            <th class="task-signups-th">Email</th>
+            <th class="task-signups-th">Phone</th>
+            <th class="task-signups-th">Address</th>
+            <th class="task-signups-th">Hobbies</th>
+            <th class="task-signups-th">Signup Date</th>
           </tr>
         </thead>
         <tbody>
           {signups.map((signup) => (
-            <tr key={signup.id}>
-              <td>{signup.name}</td>
-              <td>{signup.email}</td>
-              <td>{signup.phone}</td>
-              <td>{signup.address}</td>
-              <td>{signup.hobbies}</td>
-              <td>{signup.signup_date}</td>
+            <tr key={signup.id} class="task-signups-tr">
+              <td class="task-signups-td" data-label="Name">{signup.name}</td>
+              <td class="task-signups-td" data-label="Email">{signup.email}</td>
+              <td class="task-signups-td" data-label="Phone">{signup.phone}</td>
+              <td class="task-signups-td" data-label="Address">{signup.address}</td>
+              <td class="task-signups-td" data-label="Hobbies">{signup.hobbies}</td>
+              <td class="task-signups-td" data-label="Signup Date">{signup.signup_date}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
+);
 }
 
 export default App;
