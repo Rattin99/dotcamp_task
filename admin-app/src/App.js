@@ -41,12 +41,12 @@ function App() {
         <tbody>
           {signups.map((signup) => (
             <tr key={signup.id}>
-              <td>{signup.name}</td>
-              <td>{signup.email}</td>
-              <td>{signup.phone}</td>
-              <td>{signup.address}</td>
-              <td>{signup.hobbies}</td>
-              <td>{signup.signup_date}</td>
+              <td data-label="Name">{signup.name}</td>
+              <td data-label="Email">{signup.email}</td>
+              <td data-label="Phone">{signup.phone}</td>
+              <td data-label="Address">{signup.address}</td>
+              <td data-label="Hobbies">{signup.hobbies}</td>
+              <td data-label="Signup Date">{signup.signup_date}</td>
             </tr>
           ))}
         </tbody>

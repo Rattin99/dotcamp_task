@@ -22,6 +22,18 @@ final class Task {
         register_activation_hook(__FILE__, [$this, 'activate']);
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
+
+        register_block_type('task-plugin/signup-list', [
+            'render_callback' => 'render_signup_list_block',
+            'attributes' => [
+                'selectedPerson' => [
+                    'type' => 'number',
+                    'default' => 0
+                ]
+            ]
+        ]);
+
+        add_action('enqueue_block_editor_assets', 'enqueue_block_assets');
     }
 
     public static function init() {
@@ -75,6 +87,45 @@ final class Task {
         new Rattin\Task\Frontend\Signup();
         new Rattin\Task\Admin\Admin();
     }
+
+    function enqueue_block_assets() {
+        $asset_file = include(plugin_dir_path(__FILE__) . 'build/signup-list.asset.php');
+    
+        wp_enqueue_script(
+            'task-plugin-signup-list',
+            plugins_url('build/signup-list.js', __FILE__),
+            $asset_file['dependencies'],
+            $asset_file['version']
+        );
+    }
+
+    function render_signup_list_block($attributes) {
+        $selected_person_id = $attributes['selectedPerson'];
+        
+        if (!$selected_person_id) {
+            return '<p>' . __('Please select a person.', 'task-plugin') . '</p>';
+        }
+    
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'task_signups';
+        $person = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $selected_person_id));
+    
+        if (!$person) {
+            return '<p>' . __('Person not found.', 'task-plugin') . '</p>';
+        }
+    
+        $output = '<div class="contact-card">';
+        $output .= '<h3>' . esc_html($person->name) . '</h3>';
+        $output .= '<p><strong>' . __('Address:', 'task-plugin') . '</strong> ' . esc_html($person->address) . '</p>';
+        $output .= '<p><strong>' . __('Phone:', 'task-plugin') . '</strong> ' . esc_html($person->phone) . '</p>';
+        $output .= '<p><strong>' . __('Email:', 'task-plugin') . '</strong> ' . esc_html($person->email) . '</p>';
+        $output .= '<p><strong>' . __('Hobbies:', 'task-plugin') . '</strong> ' . esc_html($person->hobbies) . '</p>';
+        $output .= '</div>';
+    
+        return $output;
+    }
+    
+    
 }
 
 function task_plugin_init() {
