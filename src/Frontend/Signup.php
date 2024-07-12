@@ -26,7 +26,11 @@ class Signup {
     public function enqueue_scripts() {
         if (get_query_var('sign_up')) {
             wp_enqueue_style('task-signup-style', TASK_ASSETS . 'css/signup.css', [], TASK_VERSION);
-            wp_enqueue_script('task-signup-script', TASK_ASSETS . 'js/signup.js', ['jquery'], TASK_VERSION, true);
+            wp_enqueue_style('task-taglist-style', TASK_ASSETS . 'css/taglist.css', [], TASK_VERSION);
+            wp_enqueue_script('task-taglist-script', TASK_ASSETS . 'js/taglist.js', [], TASK_VERSION, true);
+            wp_enqueue_script('task-signup-script', TASK_ASSETS . 'js/signup.js', ['task-taglist-script'], TASK_VERSION, true);
+            
+            
             wp_localize_script('task-signup-script', 'taskSignup', [
                 'ajaxurl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('task_signup_nonce')
@@ -64,8 +68,12 @@ class Signup {
                     <input type="email" id="email" name="email" required>
                     
                     <label for="hobbies"><?php _e('Hobbies', 'task-plugin'); ?></label>
-                    <input type="text" id="hobbies" name="hobbies" required>
-                    
+                    <div id="hobbies-taglist" class="taglist-container">
+                        <input type="text" id="hobbies-input" placeholder="Enter hobbies">
+                        <div id="hobbies-suggestions" class="suggestions"></div>
+                        <div id="hobbies-tags" class="tags"></div>
+                    </div>
+                    <input type="hidden" id="hobbies" name="hobbies">
                     <button type="submit"><?php _e('Sign Up', 'task-plugin'); ?></button>
                 </form>
                 <div id="form-messages"></div>
